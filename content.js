@@ -32,9 +32,24 @@ function createSpeedController(videoElement) {
         changeSpeed(videoElement, SPEED_STEP);
     };
 
+    const pipButton = document.createElement('button');
+    pipButton.textContent = 'PiP';
+    pipButton.title = 'Picture-in-Picture (Ctrl + Shift + P)';
+    pipButton.onclick = (e) => {
+        e.stopPropagation();
+        togglePictureInPicture(videoElement);
+    };
+
+    // Disable PiP button if not supported or disabled for this video
+    if (!document.pictureInPictureEnabled || videoElement.disablePictureInPicture) {
+        pipButton.disabled = true;
+        pipButton.title = 'Picture-in-Picture not available';
+    }
+
     controller.appendChild(decreaseButton);
     controller.appendChild(speedDisplay);
     controller.appendChild(increaseButton);
+    controller.appendChild(pipButton); // Add the PiP button
 
     // Position the controller relative to the video
     videoElement.parentNode.style.position = 'relative'; // Ensure parent can contain absolute positioned child
@@ -56,6 +71,31 @@ function changeSpeed(videoElement, delta) {
     // The 'ratechange' event listener will update the display
     console.log(`Speed changed to ${newSpeed.toFixed(1)}x for:`, videoElement);
 }
+
+// --- New Function for PiP ---
+async function togglePictureInPicture(videoElement) {
+    if (!document.pictureInPictureEnabled) {
+        console.warn('Picture-in-Picture is not enabled in this browser.');
+        return;
+    }
+    if (videoElement.disablePictureInPicture) {
+        console.warn('Picture-in-Picture is disabled for this video.');
+        return;
+    }
+
+    try {
+        if (document.pictureInPictureElement === videoElement) {
+            await document.exitPictureInPicture();
+            console.log('Exited Picture-in-Picture for:', videoElement);
+        } else {
+            await videoElement.requestPictureInPicture();
+            console.log('Entered Picture-in-Picture for:', videoElement);
+        }
+    } catch (error) {
+        console.error('Error toggling Picture-in-Picture:', error);
+    }
+}
+// --- End New Function ---
 
 function initializeControllers() {
     const videos = document.querySelectorAll('video');
@@ -110,6 +150,12 @@ document.addEventListener('keydown', (event) => {
                 event.preventDefault();
                 changeSpeed(targetVideo, SPEED_STEP);
             }
+            // --- Add PiP Shortcut ---
+            else if (event.shiftKey && event.key.toUpperCase() === 'P') { // Ctrl/Cmd + Shift + P
+                 event.preventDefault();
+                 togglePictureInPicture(targetVideo);
+            }
+            // --- End PiP Shortcut ---
         }
     }
 });

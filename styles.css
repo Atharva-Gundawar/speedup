@@ -41,4 +41,10 @@
     min-width: 30px; /* Ensure space for speed like 16.0x */
     text-align: center;
     font-weight: bold;
+}
+
+/* Style for disabled PiP button */
+.video-speed-controller button:disabled {
+    color: #555; /* Gray out */
+    cursor: not-allowed;
 } 
