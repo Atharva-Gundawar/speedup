@@ -6,6 +6,7 @@ A simple Chrome extension that adds speed controls to any HTML5 video player.
 
 - Adds speed control buttons (+/-) to all HTML5 videos
 - Adds a Picture-in-Picture (PiP) button to pop videos out
+- Set default playback speed for all videos
 - Keyboard shortcuts for speed control and PiP
 - Works on most websites with video content
 - Speed range: 0.1x to 16x
@@ -29,12 +30,20 @@ A simple Chrome extension that adds speed controls to any HTML5 video player.
 - Click the `+` button to increase video speed
 - Click the `-` button to decrease video speed
 - Click the `PiP` button to toggle Picture-in-Picture mode
+- Click the extension icon to set default playback speed
 - Use keyboard shortcuts:
   - `Ctrl + >` (or `Cmd + >` on Mac): Increase speed
   - `Ctrl + <` (or `Cmd + <` on Mac): Decrease speed
   - `Ctrl + Shift + P` (or `Cmd + Shift + P` on Mac): Toggle Picture-in-Picture
 
-The speed controls will automatically appear above any HTML5 video player on the page.
+The controls will automatically appear above any HTML5 video player on the page.
+
+## Default Speed
+
+- Set your preferred default playback speed in the extension popup
+- The default speed will be applied to all new videos
+- Speed range: 0.1x to 16x
+- Changes are saved across browser sessions
 
 ## Speed Range
 

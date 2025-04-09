@@ -5,7 +5,8 @@
   "description": "Control video playback speed with hover controls and keyboard shortcuts.",
   "permissions": [
     "scripting",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "content_scripts": [
     {
@@ -26,6 +27,7 @@
         "48": "icon.svg",
         "128": "icon.svg"
     },
-    "default_title": "Video Speed Controller"
+    "default_title": "Video Speed Controller",
+    "default_popup": "popup.html"
   }
 } 

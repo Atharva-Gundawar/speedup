@@ -4,10 +4,38 @@ const SPEED_STEP = 0.1;
 const MIN_SPEED = 0.1;
 const MAX_SPEED = 16;
 
+// Load default speed from storage
+let defaultSpeed = 1.0;
+chrome.storage.sync.get(['defaultSpeed'], function(result) {
+    if (result.defaultSpeed) {
+        defaultSpeed = result.defaultSpeed;
+        console.log("Loaded default speed:", defaultSpeed);
+    }
+});
+
+// Listen for messages from popup
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === 'updateDefaultSpeed') {
+        defaultSpeed = request.speed;
+        console.log("Updated default speed to:", defaultSpeed);
+        
+        // Update all existing videos
+        const videos = document.querySelectorAll('video');
+        videos.forEach(video => {
+            if (!video.hasAttribute('data-speed-controller-added')) {
+                video.playbackRate = defaultSpeed;
+            }
+        });
+    }
+});
+
 function createSpeedController(videoElement) {
     if (videoElement.hasAttribute('data-speed-controller-added')) {
         return; // Controller already added
     }
+
+    // Set initial speed to default
+    videoElement.playbackRate = defaultSpeed;
 
     const controller = document.createElement('div');
     controller.className = 'video-speed-controller';
@@ -49,14 +77,14 @@ function createSpeedController(videoElement) {
     controller.appendChild(decreaseButton);
     controller.appendChild(speedDisplay);
     controller.appendChild(increaseButton);
-    controller.appendChild(pipButton); // Add the PiP button
+    controller.appendChild(pipButton);
 
     // Position the controller relative to the video
-    videoElement.parentNode.style.position = 'relative'; // Ensure parent can contain absolute positioned child
+    videoElement.parentNode.style.position = 'relative';
     videoElement.parentNode.insertBefore(controller, videoElement);
     videoElement.setAttribute('data-speed-controller-added', 'true');
 
-    // Update speed display when rate changes (e.g., by other extensions or site controls)
+    // Update speed display when rate changes
     videoElement.addEventListener('ratechange', () => {
         speedDisplay.textContent = `${videoElement.playbackRate.toFixed(1)}x`;
     });
