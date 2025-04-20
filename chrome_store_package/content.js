@@ -183,7 +183,13 @@ document.addEventListener('keydown', (event) => {
                  event.preventDefault();
                  togglePictureInPicture(targetVideo);
             }
-            // --- End PiP Shortcut ---
+            // --- Add Reset Speed Shortcut ---
+            else if (event.key === '1') { // Ctrl/Cmd + 1
+                event.preventDefault();
+                targetVideo.playbackRate = 1.0;
+                console.log('Speed reset to 1.0x for:', targetVideo);
+            }
+            // --- End Reset Speed Shortcut ---
         }
     }
 });
