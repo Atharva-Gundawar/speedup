@@ -35,7 +35,7 @@ A simple Chrome extension that adds speed controls to any HTML5 video player.
   - `Ctrl + >` (or `Cmd + >` on Mac): Increase speed
   - `Ctrl + <` (or `Cmd + <` on Mac): Decrease speed
   - `Ctrl + Shift + P` (or `Cmd + Shift + P` on Mac): Toggle Picture-in-Picture
-  - `Ctrl + 1` (or `Cmd + 1` on Mac): Reset speed to 1.0x
+  - `Ctrl + 1`: Reset speed to 1.0x
 
 The controls will automatically appear above any HTML5 video player on the page.
 
