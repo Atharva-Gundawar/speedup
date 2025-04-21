@@ -150,47 +150,48 @@ function initializeControllers() {
 
 // Handle keyboard shortcuts
 document.addEventListener('keydown', (event) => {
-    // Use event.key for modern browsers. Check for Mac Meta key or general Ctrl key.
-    if ((event.metaKey || event.ctrlKey)) {
-        let targetVideo = document.activeElement.tagName === 'VIDEO' ? document.activeElement : null;
+    let targetVideo = document.activeElement.tagName === 'VIDEO' ? document.activeElement : null;
 
-        // If no video is focused, try to find a video under the mouse
-        if (!targetVideo) {
-            const hoveredElements = document.querySelectorAll(':hover');
-            for (let i = hoveredElements.length - 1; i >= 0; i--) {
-                if (hoveredElements[i].tagName === 'VIDEO') {
-                    targetVideo = hoveredElements[i];
-                    break;
-                }
+    // Find target video if not focused
+    if (!targetVideo) {
+        const hoveredElements = document.querySelectorAll(':hover');
+        for (let i = hoveredElements.length - 1; i >= 0; i--) {
+            if (hoveredElements[i].tagName === 'VIDEO') {
+                targetVideo = hoveredElements[i];
+                break;
             }
         }
-        
-        // If still no target video, find the first controllable video on the page
-        if (!targetVideo) {
-             targetVideo = document.querySelector('video[data-speed-controller-added]');
-        }
+    }
+    if (!targetVideo) {
+        targetVideo = document.querySelector('video[data-speed-controller-added]');
+    }
 
-        if (targetVideo) {
-            if (event.key === ',') { // '<' key often represented as ','
+    if (targetVideo) {
+        // Check for Ctrl key (for all shortcuts except PiP)
+        if (event.ctrlKey && !event.metaKey) { // Use Ctrl, but NOT Cmd
+            if (event.key === ',') { 
                 event.preventDefault();
                 changeSpeed(targetVideo, -SPEED_STEP);
-            } else if (event.key === '.') { // '>' key often represented as '.'
+            } else if (event.key === '.') { 
                 event.preventDefault();
                 changeSpeed(targetVideo, SPEED_STEP);
             }
-            // --- Add PiP Shortcut ---
-            else if (event.shiftKey && event.key.toUpperCase() === 'P') { // Ctrl/Cmd + Shift + P
-                 event.preventDefault();
-                 togglePictureInPicture(targetVideo);
-            }
-            // --- Add Reset Speed Shortcut ---
-            else if (event.key === '1') { // Ctrl/Cmd + 1
+            // --- Add Reset Speed Shortcut (Ctrl+1 only) ---
+            else if (event.key === '1') {
                 event.preventDefault();
                 targetVideo.playbackRate = 1.0;
                 console.log('Speed reset to 1.0x for:', targetVideo);
             }
             // --- End Reset Speed Shortcut ---
         }
+
+        // --- Add PiP Shortcut (Ctrl/Cmd + Shift + P) ---
+        // Check separately as it allows Cmd on Mac
+        if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toUpperCase() === 'P') { 
+            event.preventDefault();
+            togglePictureInPicture(targetVideo);
+        }
+        // --- End PiP Shortcut ---
     }
 });
 
